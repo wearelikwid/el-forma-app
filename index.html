@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Forma App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        select, button {
+            font-size: 16px;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #workout {
+            white-space: pre-wrap;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .workout-section {
+            margin-bottom: 20px;
+        }
+        .workout-section h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        .exercise {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .exercise-name {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>El Forma App</h1>
+    <select id="workoutType">
+        <option value="fullBody">Full Body Workout</option>
+        <option value="upperBody">Upper Body Workout</option>
+        <option value="lowerBody">Lower Body Workout</option>
+        <option value="core">Core Workout</option>
+        <option value="hiit">HIIT Workout</option>
+    </select>
+    <select id="workoutDuration">
+        <option value="30">30 minutes</option>
+        <option value="60">60 minutes</option>
+        <option value="120">120 minutes</option>
+    </select>
+    <button onclick="generateWorkout()">Generate Workout</button>
+    <div id="workout"></div>
+
+    <script>
+        const workouts = {
+            fullBody: [
+                ["Push-ups", "10-15 reps"],
+                ["Squats", "15-20 reps"],
+                ["Dumbbell Rows", "10-12 reps each arm"],
+                ["Lunges", "10-12 reps each leg"],
+                ["Shoulder Press", "10-12 reps"],
+                ["Plank", "30-60 seconds"],
+                ["Burpees", "10 reps"],
+                ["Bicycle Crunches", "20 reps"],
+                ["Dips", "10-15 reps"],
+                ["Mountain Climbers", "30 seconds"]
+            ],
+            upperBody: [
+                ["Push-ups", "12-15 reps"],
+                ["Dumbbell Rows", "10-12 reps each arm"],
+                ["Shoulder Press", "10-12 reps"],
+                ["Tricep Dips", "10-15 reps"],
+                ["Bicep Curls", "10-12 reps"],
+                ["Pull-ups or Assisted Pull-ups", "5-10 reps"],
+                ["Lateral Raises", "10-12 reps"],
+                ["Diamond Push-ups", "8-10 reps"],
+                ["Hammer Curls", "10-12 reps"],
+                ["Plank to Downward Dog", "10 reps"]
+            ],
+            lowerBody: [
+                ["Squats", "15-20 reps"],
+                ["Lunges", "10-12 reps each leg"],
+                ["Deadlifts", "10-12 reps"],
+                ["Calf Raises", "15-20 reps"],
+                ["Glute Bridges", "15-20 reps"],
+                ["Step-ups", "10-12 reps each leg"],
+                ["Wall Sit", "30-60 seconds"],
+                ["Sumo Squats", "15-20 reps"],
+                ["Single-Leg Deadlifts", "8-10 reps each leg"],
+                ["Jump Squats", "10-15 reps"]
+            ],
+            core: [
+                ["Plank", "30-60 seconds"],
+                ["Bicycle Crunches", "20 reps"],
+                ["Russian Twists", "20 reps"],
+                ["Leg Raises", "15 reps"],
+                ["Mountain Climbers", "30 seconds"],
+                ["Side Plank", "30 seconds each side"],
+                ["Reverse Crunches", "15 reps"],
+                ["Flutter Kicks", "20 seconds"],
+                ["Dead Bug", "10 reps each side"],
+                ["Plank Jacks", "20 reps"]
+            ],
+            hiit: [
+                ["Burpees", "10 reps"],
+                ["High Knees", "30 seconds"],
+                ["Jumping Jacks", "30 seconds"],
+                ["Mountain Climbers", "30 seconds"],
+                ["Jump Squats", "15 reps"],
+                ["Plank Jacks", "20 reps"],
+                ["Skater Hops", "20 reps"],
+                ["Squat Thrusts", "10 reps"],
+                ["Alternating Lunge Jumps", "20 reps"],
+                ["Tuck Jumps", "10 reps"]
+            ]
+        };
+
+        const warmups = [
+            ["Arm Circles", "10 forward, 10 backward"],
+            ["Leg Swings", "10 each leg"],
+            ["Torso Twists", "10 each side"],
+            ["Jumping Jacks", "20 reps"],
+            ["High Knees", "30 seconds"],
+            ["Bodyweight Squats", "10 reps"],
+            ["Walking Lunges", "10 each leg"],
+            ["Hip Rotations", "10 each direction"],
+            ["Shoulder Rolls", "10 forward, 10 backward"],
+            ["Butt Kicks", "30 seconds"]
+        ];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function generateWorkout() {
+            const type = document.getElementById('workoutType').value;
+            const duration = parseInt(document.getElementById('workoutDuration').value);
+            const exercises = [...workouts[type]];
+            shuffleArray(exercises);
+
+            let workout = `<h2>${type.toUpperCase()} WORKOUT (${duration} minutes)</h2>`;
+
+            // Warmup
+            workout += "<div class='workout-section'><h2>Warmup</h2>";
+            const warmupExercises = [...warmups];
+            shuffleArray(warmupExercises);
+            for (let i = 0; i < 5; i++) {
+                const [exercise, reps] = warmupExercises[i];
+                workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+            }
+            workout += "</div>";
+
+            // Main workout
+            const structures = ["Blocks", "Circuits", "EMOM", "AMRAP", "Tabata"];
+            const structure = structures[Math.floor(Math.random() * structures.length)];
+
+            switch (structure) {
+                case "Blocks":
+                    workout += generateBlocks(exercises, duration);
+                    break;
+                case "Circuits":
+                    workout += generateCircuits(exercises, duration);
+                    break;
+                case "EMOM":
+                    workout += generateEMOM(exercises, duration);
+                    break;
+                case "AMRAP":
+                    workout += generateAMRAP(exercises, duration);
+                    break;
+                case "Tabata":
+                    workout += generateTabata(exercises, duration);
+                    break;
+            }
+
+            workout += "<div class='workout-section'><h2>Cool Down</h2>";
+            workout += "<p>Light stretching for 5-10 minutes.</p>";
+            workout += "<p>Remember to adjust intensity and rest periods based on your fitness level.</p></div>";
+
+            document.getElementById('workout').innerHTML = workout;
+        }
+
+        function generateBlocks(exercises, duration) {
+            let workout = "<div class='workout-section'><h2>Workout Structure: Blocks</h2>";
+            const blocks = Math.floor(duration / 20);
+            const exercisesPerBlock = 4;
+            const rounds = 3;
+
+            for (let i = 0; i < blocks; i++) {
+                workout += `<h3>Block ${i + 1} (${rounds} rounds)</h3>`;
+                for (let j = 0; j < exercisesPerBlock; j++) {
+                    const index = i * exercisesPerBlock + j;
+                    if (index < exercises.length) {
+                        const [exercise, reps] = exercises[index];
+                        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+                    }
+                }
+                workout += "<p>Rest 60-90 seconds between rounds and blocks.</p>";
+            }
+            workout += "</div>";
+            return workout;
+        }
+
+        function generateCircuits(exercises, duration) {
+            let workout = "<div class='workout-section'><h2>Workout Structure: Circuits</h2>";
+            const circuits = Math.floor(duration / 30);
+            const exercisesPerCircuit = 5;
+            const rounds = 3;
+
+            for (let i = 0; i < circuits; i++) {
+                workout += `<h3>Circuit ${i + 1} (${rounds} rounds)</h3>`;
+                for (let j = 0; j < exercisesPerCircuit; j++) {
+                    const index = i * exercisesPerCircuit + j;
+                    if (index < exercises.length) {
+                        const [exercise, reps] = exercises[index];
+                        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+                    }
+                }
+                workout += "<p>Rest 2-3 minutes between rounds and circuits.</p>";
+            }
+            workout += "</div>";
+            return workout;
+        }
+
+        function generateEMOM(exercises, duration) {
+            let workout = "<div class='workout-section'><h2>Workout Structure: EMOM (Every Minute On the Minute)</h2>";
+            workout += "<p>Perform each exercise for 45 seconds, rest for 15 seconds, then move to the next exercise.</p>";
+            workout += `<p>Complete ${duration / 5} rounds (${duration} minutes total):</p>`;
+
+            for (let i = 0; i < 5; i++) {
+                const [exercise] = exercises[i];
+                workout += `<div class='exercise'><span class='exercise-name'>Minute ${i + 1}: ${exercise}</span></div>`;
+            }
+            workout += "</div>";
+            return workout;
+        }
+
+        function generateAMRAP(exercises, duration) {
+            let workout = "<div class='workout-section'><h2>Workout Structure: AMRAP (As Many Rounds As Possible)</h2>";
+            workout += `<p>Complete as many rounds as possible in ${duration} minutes:</p>`;
+
+            for (let i = 0; i < 5; i++) {
+                const [exercise, reps] = exercises[i];
+                workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+            }
+            workout += "</div>";
+            return workout;
+        }
+
+        function generateTabata(exercises, duration) {
+            let workout = "<div class='workout-section'><h2>Workout Structure: Tabata</h2>";
+            workout += "<p>Perform each exercise for 20 seconds, rest for 10 seconds.</p>";
+            workout += `<p>Complete ${duration / 4} rounds of each exercise before moving to the next.</p>`;
+
+            for (let i = 0; i < 4; i++) {
+                const [exercise] = exercises[i];
+                workout += `<div class='exercise'><span class='exercise-name'>Exercise ${i + 1}: ${exercise}</span></div>`;
+            }
+            workout += "</div>";
+            return workout;
+        }
+    </script>
+</body>
+</html>
