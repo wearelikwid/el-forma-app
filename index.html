@@ -304,137 +304,168 @@
         ];
 
         function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function generateWorkout() {
+    const type = document.getElementById('workoutType').value;
+    const duration = parseInt(document.getElementById('workoutDuration').value);
+    const exercises = [...workouts[type]];
+    shuffleArray(exercises);
+
+    let workout = `<h2>${type.toUpperCase()} WORKOUT (${duration} minutes)</h2>`;
+
+    // Warmup
+    workout += generateWarmup();
+
+    // Main workout
+    workout += generateMainWorkout(exercises, duration);
+
+    // Cool Down
+    workout += generateCoolDown();
+
+    document.getElementById('workout').innerHTML = workout;
+}
+
+function generateMainWorkout(exercises, duration) {
+    let workout = "";
+    let remainingDuration = duration;
+    const structures = ["Blocks", "Circuits", "EMOM", "AMRAP", "Tabata"];
+    
+    while (remainingDuration > 0) {
+        const structure = structures[Math.floor(Math.random() * structures.length)];
+        let structureDuration;
+
+        switch (structure) {
+            case "Blocks":
+                structureDuration = Math.min(remainingDuration, 20);
+                workout += generateBlocks(exercises, structureDuration);
+                break;
+            case "Circuits":
+                structureDuration = Math.min(remainingDuration, 30);
+                workout += generateCircuits(exercises, structureDuration);
+                break;
+            case "EMOM":
+                structureDuration = Math.min(remainingDuration, 15);
+                workout += generateEMOM(exercises, structureDuration);
+                break;
+            case "AMRAP":
+                structureDuration = Math.min(remainingDuration, 20);
+                workout += generateAMRAP(exercises, structureDuration);
+                break;
+            case "Tabata":
+                structureDuration = Math.min(remainingDuration, 16);
+                workout += generateTabata(exercises, structureDuration);
+                break;
         }
 
-        function generateWorkout() {
-            const type = document.getElementById('workoutType').value;
-            const duration = parseInt(document.getElementById('workoutDuration').value);
-            const exercises = [...workouts[type]];
-            shuffleArray(exercises);
+        remainingDuration -= structureDuration;
+        shuffleArray(exercises); // Reshuffle exercises for variety
+    }
 
-            let workout = `<h2>${type.toUpperCase()} WORKOUT (${duration} minutes)</h2>`;
+    return workout;
+}
 
-            // Warmup
-            workout += "<div class='workout-section'><h2>Warmup</h2>";
-            const warmupExercises = [...warmups];
-            shuffleArray(warmupExercises);
-            for (let i = 0; i < 5; i++) {
-                const [exercise, reps] = warmupExercises[i];
-                workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
-            }
-            workout += "</div>";
+function generateBlocks(exercises, duration) {
+    let workout = "<div class='workout-section'><h2>Workout Structure: Blocks</h2>";
+    const blocks = Math.max(1, Math.floor(duration / 10));
+    const exercisesPerBlock = 3;
+    const rounds = 2;
 
-            // Main workout
-            const structures = ["Blocks", "Circuits", "EMOM", "AMRAP", "Tabata"];
-            const structure = structures[Math.floor(Math.random() * structures.length)];
-
-            switch (structure) {
-                case "Blocks":
-                    workout += generateBlocks(exercises, duration);
-                    break;
-                case "Circuits":
-                    workout += generateCircuits(exercises, duration);
-                    break;
-                case "EMOM":
-                    workout += generateEMOM(exercises, duration);
-                    break;
-                case "AMRAP":
-                    workout += generateAMRAP(exercises, duration);
-                    break;
-                case "Tabata":
-                    workout += generateTabata(exercises, duration);
-                    break;
-            }
-
-            workout += "<div class='workout-section'><h2>Cool Down</h2>";
-            workout += "<p>Light stretching for 5-10 minutes.</p>";
-            workout += "<p>Remember to adjust intensity and rest periods based on your fitness level.</p></div>";
-
-            document.getElementById('workout').innerHTML = workout;
+    for (let i = 0; i < blocks; i++) {
+        workout += `<h3>Block ${i + 1} (${rounds} rounds)</h3>`;
+        for (let j = 0; j < exercisesPerBlock; j++) {
+            const index = (i * exercisesPerBlock + j) % exercises.length;
+            const [exercise, reps] = exercises[index];
+            workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
         }
+        workout += "<p>Rest 60 seconds between rounds and blocks.</p>";
+    }
+    workout += "</div>";
+    return workout;
+}
 
-        function generateBlocks(exercises, duration) {
-            let workout = "<div class='workout-section'><h2>Workout Structure: Blocks</h2>";
-            const blocks = Math.floor(duration / 20);
-            const exercisesPerBlock = 4;
-            const rounds = 3;
+function generateCircuits(exercises, duration) {
+    let workout = "<div class='workout-section'><h2>Workout Structure: Circuits</h2>";
+    const circuits = Math.max(1, Math.floor(duration / 15));
+    const exercisesPerCircuit = 4;
+    const rounds = 2;
 
-            for (let i = 0; i < blocks; i++) {
-                workout += `<h3>Block ${i + 1} (${rounds} rounds)</h3>`;
-                for (let j = 0; j < exercisesPerBlock; j++) {
-                    const index = i * exercisesPerBlock + j;
-                    if (index < exercises.length) {
-                        const [exercise, reps] = exercises[index];
-                        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
-                    }
-                }
-                workout += "<p>Rest 60-90 seconds between rounds and blocks.</p>";
-            }
-            workout += "</div>";
-            return workout;
+    for (let i = 0; i < circuits; i++) {
+        workout += `<h3>Circuit ${i + 1} (${rounds} rounds)</h3>`;
+        for (let j = 0; j < exercisesPerCircuit; j++) {
+            const index = (i * exercisesPerCircuit + j) % exercises.length;
+            const [exercise, reps] = exercises[index];
+            workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
         }
+        workout += "<p>Rest 90 seconds between rounds and circuits.</p>";
+    }
+    workout += "</div>";
+    return workout;
+}
 
-        function generateCircuits(exercises, duration) {
-            let workout = "<div class='workout-section'><h2>Workout Structure: Circuits</h2>";
-            const circuits = Math.floor(duration / 30);
-            const exercisesPerCircuit = 5;
-            const rounds = 3;
+function generateEMOM(exercises, duration) {
+    let workout = "<div class='workout-section'><h2>Workout Structure: EMOM (Every Minute On the Minute)</h2>";
+    workout += "<p>Perform each exercise for 45 seconds, rest for 15 seconds, then move to the next exercise.</p>";
+    const rounds = Math.max(1, Math.floor(duration / 5));
+    workout += `<p>Complete ${rounds} rounds (${duration} minutes total):</p>`;
 
-            for (let i = 0; i < circuits; i++) {
-                workout += `<h3>Circuit ${i + 1} (${rounds} rounds)</h3>`;
-                for (let j = 0; j < exercisesPerCircuit; j++) {
-                    const index = i * exercisesPerCircuit + j;
-                    if (index < exercises.length) {
-                        const [exercise, reps] = exercises[index];
-                        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
-                    }
-                }
-                workout += "<p>Rest 2-3 minutes between rounds and circuits.</p>";
-            }
-            workout += "</div>";
-            return workout;
-        }
+    for (let i = 0; i < Math.min(5, exercises.length); i++) {
+        const [exercise] = exercises[i];
+        workout += `<div class='exercise'><span class='exercise-name'>Minute ${i + 1}: ${exercise}</span></div>`;
+    }
+    workout += "</div>";
+    return workout;
+}
 
-        function generateEMOM(exercises, duration) {
-            let workout = "<div class='workout-section'><h2>Workout Structure: EMOM (Every Minute On the Minute)</h2>";
-            workout += "<p>Perform each exercise for 45 seconds, rest for 15 seconds, then move to the next exercise.</p>";
-            workout += `<p>Complete ${duration / 5} rounds (${duration} minutes total):</p>`;
+function generateAMRAP(exercises, duration) {
+    let workout = "<div class='workout-section'><h2>Workout Structure: AMRAP (As Many Rounds As Possible)</h2>";
+    workout += `<p>Complete as many rounds as possible in ${duration} minutes:</p>`;
 
-            for (let i = 0; i < 5; i++) {
-                const [exercise] = exercises[i];
-                workout += `<div class='exercise'><span class='exercise-name'>Minute ${i + 1}: ${exercise}</span></div>`;
-            }
-            workout += "</div>";
-            return workout;
-        }
+    const exercisesCount = Math.min(5, exercises.length);
+    for (let i = 0; i < exercisesCount; i++) {
+        const [exercise, reps] = exercises[i];
+        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+    }
+    workout += "</div>";
+    return workout;
+}
 
-        function generateAMRAP(exercises, duration) {
-            let workout = "<div class='workout-section'><h2>Workout Structure: AMRAP (As Many Rounds As Possible)</h2>";
-            workout += `<p>Complete as many rounds as possible in ${duration} minutes:</p>`;
+function generateTabata(exercises, duration) {
+    let workout = "<div class='workout-section'><h2>Workout Structure: Tabata</h2>";
+    workout += "<p>Perform each exercise for 20 seconds, rest for 10 seconds.</p>";
+    const rounds = Math.max(1, Math.floor(duration / 4));
+    workout += `<p>Complete ${rounds} rounds of each exercise before moving to the next.</p>`;
 
-            for (let i = 0; i < 5; i++) {
-                const [exercise, reps] = exercises[i];
-                workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
-            }
-            workout += "</div>";
-            return workout;
-        }
+    const exercisesCount = Math.min(4, exercises.length);
+    for (let i = 0; i < exercisesCount; i++) {
+        const [exercise] = exercises[i];
+        workout += `<div class='exercise'><span class='exercise-name'>Exercise ${i + 1}: ${exercise}</span></div>`;
+    }
+    workout += "</div>";
+    return workout;
+}
 
-        function generateTabata(exercises, duration) {
-            let workout = "<div class='workout-section'><h2>Workout Structure: Tabata</h2>";
-            workout += "<p>Perform each exercise for 20 seconds, rest for 10 seconds.</p>";
-            workout += `<p>Complete ${duration / 4} rounds of each exercise before moving to the next.</p>`;
+function generateWarmup() {
+    let workout = "<div class='workout-section'><h2>Warmup</h2>";
+    const warmupExercises = [...warmups];
+    shuffleArray(warmupExercises);
+    for (let i = 0; i < 5; i++) {
+        const [exercise, reps] = warmupExercises[i];
+        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+    }
+    workout += "</div>";
+    return workout;
+}
 
-            for (let i = 0; i < 4; i++) {
-                const [exercise] = exercises[i];
-                workout += `<div class='exercise'><span class='exercise-name'>Exercise ${i + 1}: ${exercise}</span></div>`;
-            }
-            workout += "</div>";
-            return workout;
-        }
+function generateCoolDown() {
+    let workout = "<div class='workout-section'><h2>Cool Down</h2>";
+    workout += "<p>Light stretching for 5-10 minutes.</p>";
+    workout += "<p>Remember to adjust intensity and rest periods based on your fitness level.</p></div>";
+    return workout;
+}
     </script>
 </html>
