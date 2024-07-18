@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- This section contains metadata about the document -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Forma App 🦾</title>
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header section -->
+    <header>
+        <h1>El Forma App 🦾</h1>
+    </header>
+
+    <!-- Main content section -->
+    <main>
+        <!-- Form for workout selection -->
+        <form id="workoutForm" aria-label="Workout Generator Form">
+            <!-- Workout type selection -->
+            <label for="workoutType">What do you want to do today?</label>
+            <select id="workoutType" name="workoutType">
+                <option value="fullBody">Full Body Workout</option>
+                <option value="upperBody">Upper Body Workout</option>
+                <option value="lowerBody">Lower Body Workout</option>
+                <option value="core">Core Workout</option>
+                <option value="hiit">HIIT Workout</option>
+            </select>
+
+            <!-- Workout duration selection -->
+            <label for="workoutDuration">Choose workout duration:</label>
+            <select id="workoutDuration" name="workoutDuration">
+                <option value="30">30 minutes</option>
+                <option value="60">60 minutes</option>
+                <option value="120">120 minutes</option>
+            </select>
+
+            <!-- Button to generate workout -->
+            <button type="submit" id="generateWorkoutBtn">Generate Workout</button>
+        </form>
+
+        <!-- Section to display the generated workout -->
+        <section id="workoutResult" aria-live="polite"></section>
+    </main>
+
+    <!-- Footer section -->
+    <footer>
+        <p>&copy; 2023 El Forma App. All rights reserved.</p>
+    </footer>
+
+    <!-- Link to your JavaScript file -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
