@@ -7,67 +7,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             line-height: 1.6;
-            background-color: #f5f5f5;
+        }
+        h1, h2, h3 {
             color: #333;
         }
-        h1 {
-            font-size: 2.5em;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
         select, button {
-            font-size: 16px;
             margin: 10px 0;
-            padding: 10px;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
+            padding: 5px;
         }
         #workout {
-            white-space: pre-wrap;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             margin-top: 20px;
-        }
-        .workout-section {
-            margin-bottom: 20px;
-        }
-        .workout-section h2 {
-            color: #2c3e50;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 5px;
-        }
-        .exercise {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .exercise-name {
-            font-weight: bold;
-        }
-        #workout-question {
-    font-size: 1.2em;
-    color: #3498db;
-    text-align: center;
-    margin-bottom: 15px;
         }
     </style>
 </head>
@@ -86,386 +40,74 @@
         <option value="60">60 minutes</option>
         <option value="120">120 minutes</option>
     </select>
-    <button onclick="generateWorkout()">Generate Workout</button>
+    <button id="generateWorkoutBtn">Generate Workout</button>
     <div id="workout"></div>
 
-    <script>
-        const workouts = {
-            fullBody: [
-                ["Push-ups", "10-15 reps"],
-                ["Squats", "15-20 reps"],
-                ["Dumbbell Rows", "10-12 reps each arm"],
-                ["Lunges", "10-12 reps each leg"],
-                ["Shoulder Press", "10-12 reps"],
-                ["Plank", "30-60 seconds"],
-                ["Burpees", "10 reps"],
-                ["Bicycle Crunches", "20 reps"],
-                ["Dips", "10-15 reps"],
-                ["Mountain Climbers", "30 seconds"]
-                ["Hex Bar Deadlift", "8-10 reps"],
-                ["Hang Clean to Overhead Press", "8-10 reps",],
-                ["Kettlebell Clean to Ascending Overhead Press", "1-5 reps",],
-                ["Dumbbell Plank and Hip Flexor Step Through", "60 seconds",],
-                ["Superman Plank Ball Touch", "30 seconds",],
-                ["Forward Overhead Lunge With Rotation", "10-12 reps",],
-                ["Kettlebell Plank to Hip Flexor Stretch", "5 per side",]
-                ["Barbell Bench Press", "8-10 reps"],
-                ["Kettlebell Front Squat", "8-10 reps"],
-                ["Standing Alternating Arm Dumbbell Shoulder Press", "5-8 reps per arm"],
-                ["Chin-Up", "5-8 reps"],
-                ["Walking Dumbbell Lunges", "20 steps total"],
-                ["Suspension Trainer Depth Drop to Muscle Overhead", "45 seconds"],
-                ["Bodyweight Squat", "15-20 reps"],
-                ["Dumbbell 3-Second Pause Chest Press", "8-10 reps"],
-                ["Standing Cable Row", "15-20 reps"]
-            ],
-            upperBody: [
-                ["Push-ups", "12-15 reps"],
-                ["Dumbbell Rows", "10-12 reps each arm"],
-                ["Shoulder Press", "10-12 reps"],
-                ["Tricep Dips", "10-15 reps"],
-                ["Bicep Curls", "10-12 reps"],
-                ["Pull-ups or Assisted Pull-ups", "5-10 reps"],
-                ["Lateral Raises", "10-12 reps"],
-                ["Diamond Push-ups", "8-10 reps"],
-                ["Hammer Curls", "10-12 reps"],
-                ["Plank to Downward Dog", "10 reps"]
-                ["Dumbbell Rows", "10-12 reps each arm"],
-                ["Shoulder Press", "10-12 reps"],
-                ["Tricep Dips", "10-15 reps"],
-                ["Bicep Curls", "10-12 reps"],
-                ["Pull-ups or Assisted Pull-ups", "5-10 reps"],
-                ["Lateral Raises", "10-12 reps"],
-                ["Diamond Push-ups", "8-10 reps"],
-                ["Hammer Curls", "10-12 reps"],
-                ["Straight Bar Cable Triceps Pressdown", "15 reps",],
-                ["Bodyweight Skull Crusher", "10-12 reps",],
-                ["Seated Reclined Double Biceps Curl", "8-10 reps",],
-                ["Reverse Grip Triceps Band Pressdown", "15 reps",],
-                ["Triceps Band Pressdown", "8-10 reps",],
-                ["Alternating Bottom Half Hammer Curl with Hold", "8-10 per side",],
-                ["Alternating Biceps Curl with Top Hold", "10 per arm",],
-                ["Mid Cable Chest Fly", "8-10 reps",],
-                ["Military Grip Pullup", "10 reps",],
-                ["Parallel Grip Pull-Up", "10 reps",],
-                ["Dumbbell Skull Crusher", "8-10 reps",],
-                ["External Band Rotation", "10-12 reps",],
-                ["Standing Underhand Cable Row", "15 reps",],
-                ["Dumbbell Shrug", "15 reps",],
-                ["Banded Dumbbell Biceps Curl", "8-10 reps",],
-                ["Wall Curl", "8-10 reps",],
-                ["Incline Dumbbell Chest Press", "5-8 reps",],
-                ["High Cable Chest Fly", "8-10 reps",],
-                ["Wide Grip W Bar Triceps Press Down", "8-10 reps",],
-                ["Strict Overhead Barbell Press", "20 reps",],
-                ["Single Arm Alternating Lateral Shoulder Raise with Top Hold", "10 per arm",],
-                ["Rear Delt Raise", "15 reps",],
-                ["Triceps Rope Pressdown", "8-10 reps",],
-                ["Equalizer Skull Crusher", "10-12 reps",],
-                ["Incline Dumbbell Chest Fly", "8-10 reps",],
-                ["Single Single Double Incline Dumbbell Chest Press", "5-8 reps",],
-                ["Close Grip Incline Bench Push-up", "15 reps",],
-                ["Lateral Band Step Biceps Curl", "8-10 reps",],
-                ["Cable Rope Pulldown", "10-12 reps",],
-                ["Barbell Shrug", "20 reps",]
-            ],
-            lowerBody: [
-                ["Squats", "15-20 reps"],
-                ["Lunges", "10-12 reps each leg"],
-                ["Deadlifts", "10-12 reps"],
-                ["Calf Raises", "15-20 reps"],
-                ["Glute Bridges", "15-20 reps"],
-                ["Step-ups", "10-12 reps each leg"],
-                ["Wall Sit", "30-60 seconds"],
-                ["Sumo Squats", "15-20 reps"],
-                ["Single-Leg Deadlifts", "8-10 reps each leg"],
-                ["Jump Squats", "10-15 reps"]
-                ["Hex Bar Deadlift", "8-10 reps"],
-                ["Lateral Band Steps", "15-20 steps each side"],
-                ["Standing Calf Raise", "15-20 reps"],
-                ["Dumbbell Goblet Squat", "8-10 reps",],
-                ["Reverse Alternating Barbell Lunge", "16 reps",],
-                ["Forward Alternating Barbell Lunge", "16 reps",],
-                ["Pendulum Barbell Lunge", "8-10 per leg",],
-                ["Elevated Dumbbell Goblet Squat Circuit", "5 reps in each position",],
-                ["Elevated Kettlebell Deadlift", "15-20 reps",]
-                ["Barbell Front Squat", "8-10 reps"],
-                ["Kettlebell Front Squat", "10-12 reps"],
-                ["Walking Dumbbell Lunges", "20 steps total"],
-                ["Fixed Bent Knee Standing Calf Raises", "15-20 reps"],
-                ["Alternating Single Leg RDL Row", "8-10 reps each leg"],
-                ["Bodyweight Squat", "15-20 reps"],
-                ["Elevated Heel Bodyweight Squat", "15-20 reps"]
-            ],
-            core: [
-                ["Plank", "30-60 seconds"],
-                ["Bicycle Crunches", "20 reps"],
-                ["Russian Twists", "20 reps"],
-                ["Leg Raises", "15 reps"],
-                ["Mountain Climbers", "30 seconds"],
-                ["Side Plank", "30 seconds each side"],
-                ["Reverse Crunches", "15 reps"],
-                ["Flutter Kicks", "20 seconds"],
-                ["Dead Bug", "10 reps each side"],
-                ["Plank Jacks", "20 reps"]
-                ["Seated Knee Tuck", "15 reps"],
-                ["V-Ups", "12 reps"],
-                ["Jack Knife", "12 reps"],
-                ["Toe Touches", "20 reps"],
-                ["Butterfly Sit Ups", "15 reps"],
-                ["Sprinter Sit Ups", "10 reps each side"],
-                ["6 Inch Holds", "30 seconds"],
-                ["Table Top Leg Press", "15 reps each leg"],
-                ["Bird Dog", "10 reps each side"],
-                ["Oblique Crunch", "15 reps each side"],
-                ["Alt Jack Knife", "10 reps each side"],
-                ["Plank Dips", "10 reps each side"],
-                ["Trunk Rotation", "20 reps"],
-                ["Bent Knee Wipers", "10 reps each side"],
-                ["Alt. Lunge Rotation", "10 reps each side"],
-                ["Half Kneeling Rotational Chop", "10 reps each side"],
-                ["Bicycles", "30 seconds"],
-                ["Cross Mountain Climbers", "30 seconds"],
-                ["Pull Over Twist", "12 reps"]
-                ["Hollow Body Hold", "30 seconds"],
-                ["Superman", "15 reps"],
-                ["Scissor Kicks", "30 seconds"],
-                ["Pike Crunch", "15 reps"],
-                ["Seated In and Outs", "20 reps"],
-                ["Plank to Downward Dog", "10 reps"],
-                ["Bird-Dog Crunch", "10 reps each side"],
-                ["Forearm Plank Rock", "30 seconds"],
-                ["Bear Crawl Hold", "30 seconds"],
-                ["Lying Leg Raises", "15 reps"],
-                ["Alternating Toe Touches", "20 reps"],
-                ["Plank Hip Dips", "20 reps"],
-                ["Roll-Up", "10 reps"],
-                ["Oblique V-Ups", "10 reps each side"],
-                ["Windshield Wipers", "10 reps each side"],
-                ["Plank Knee to Elbow", "10 reps each side"],
-                ["Side Plank with Hip Lift", "10 reps each side"],
-                ["Reverse Plank", "30 seconds"],
-                ["Spiderman Plank", "10 reps each side"]
-                ["Forearm Plank With Lateral Skip", "30 seconds"],
-                ["Equalizer Dip to Knee Tuck", "10 reps"],
-                ["Equalizer Dip to L Sit", "8 reps"],
-                ["Suspension Overhead Oblique Bend", "10 reps each side"],
-                ["Bird Dog Plank Pushup", "8 reps each side"],
-                ["Plank Pushup To Side Plank", "10 reps total"],
-                ["Close Grip Push Up with Alternating Side Plank Punch", "10 reps total"],
-                ["Suspension Oblique to Overhead with Single Arm", "8 reps each side"],
-                ["Suspension Mobility Rotation", "10 reps each side"]
-            ],
-            hiit: [
-                ["Burpees", "10 reps"],
-                ["High Knees", "30 seconds"],
-                ["Jumping Jacks", "30 seconds"],
-                ["Mountain Climbers", "30 seconds"],
-                ["Jump Squats", "15 reps"],
-                ["Plank Jacks", "20 reps"],
-                ["Skater Hops", "20 reps"],
-                ["Squat Thrusts", "10 reps"],
-                ["Alternating Lunge Jumps", "20 reps"],
-                ["Tuck Jumps", "10 reps"]
-                ["Kettlebell Deadlift Burpee", "45 seconds", "Challenge"],
-                ["Medial-Lateral Plyo Bench Push-Up", "10-12 reps",],
-                ["Plank Push Up", "15 reps",],
-                ["Single Dumbbell Row To Goblet Curl", "8-10 reps",],
-                ["Slam Ball Rotation Burpee Flow", "10 full sequences per side",],
-                ["Kettlebell Low Clean Squat Complex", "10 complete sequences",],
-                ["Pushup Breakdown Flow", "As shown in video",],
-                ["Walking Lunge With Rotation", "16 reps",],
-                ["Renegade Row Burpee Biceps Curl", "8-10 reps",],
-                ["Ascending Close Grip Pushup to Side Plank Punch", "1-5 per side",],
-                ["Kettlebell Clean to Overhead Press Burpee Flow", "As shown in video",]
-                ["Slam Ball Burpee with Ascending Overhead Press", "8 reps"],
-                ["Suspension Trainer Depth Drop to Muscle Overhead", "45 seconds"],
-                ["Equalizer Chest Fly Push Up", "10 reps"],
-                ["Equalizer Muscle Up", "5 reps"],
-                ["Incline EQ Pushup with Descending Knee Tuck", "10 reps"],
-                ["Bird Dog Plank Pushup", "8 reps each side"],
-                ["Close Grip Push Up with Alternating Side Plank Punch", "10 reps total"],
-                ["Hang Clean to Ascending Overhead Press Ladder", "5 reps"],
-                ["Suspension Lever Squat To Overhead T Squat", "10 reps"]
-            ]
-        };
-
-        const warmups = [
-            ["Arm Circles", "10 forward, 10 backward"],
-            ["Leg Swings", "10 each leg"],
-            ["Torso Twists", "10 each side"],
-            ["Jumping Jacks", "20 reps"],
-            ["High Knees", "30 seconds"],
-            ["Bodyweight Squats", "10 reps"],
-            ["Walking Lunges", "10 each leg"],
-            ["Hip Rotations", "10 each direction"],
-            ["Shoulder Rolls", "10 forward, 10 backward"],
-            ["Butt Kicks", "30 seconds"]
-        ];
+    <script type="module">
+        import { workouts, warmups } from './exercises.js';
 
         function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
-function generateWorkout() {
-    const type = document.getElementById('workoutType').value;
-    const duration = parseInt(document.getElementById('workoutDuration').value);
-    const exercises = [...workouts[type]];
-    shuffleArray(exercises);
-
-    let workout = `<h2>${type.toUpperCase()} WORKOUT (${duration} minutes)</h2>`;
-
-    // Warmup
-    workout += generateWarmup();
-
-    // Main workout
-    workout += generateMainWorkout(exercises, duration);
-
-    // Cool Down
-    workout += generateCoolDown();
-
-    document.getElementById('workout').innerHTML = workout;
-}
-
-function generateMainWorkout(exercises, duration) {
-    let workout = "";
-    let remainingDuration = duration;
-    const structures = ["Blocks", "Circuits", "EMOM", "AMRAP", "Tabata"];
-    
-    while (remainingDuration > 0) {
-        const structure = structures[Math.floor(Math.random() * structures.length)];
-        let structureDuration;
-
-        switch (structure) {
-            case "Blocks":
-                structureDuration = Math.min(remainingDuration, 20);
-                workout += generateBlocks(exercises, structureDuration);
-                break;
-            case "Circuits":
-                structureDuration = Math.min(remainingDuration, 30);
-                workout += generateCircuits(exercises, structureDuration);
-                break;
-            case "EMOM":
-                structureDuration = Math.min(remainingDuration, 15);
-                workout += generateEMOM(exercises, structureDuration);
-                break;
-            case "AMRAP":
-                structureDuration = Math.min(remainingDuration, 20);
-                workout += generateAMRAP(exercises, structureDuration);
-                break;
-            case "Tabata":
-                structureDuration = Math.min(remainingDuration, 16);
-                workout += generateTabata(exercises, structureDuration);
-                break;
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
         }
 
-        remainingDuration -= structureDuration;
-        shuffleArray(exercises); // Reshuffle exercises for variety
-    }
-
-    return workout;
-}
-
-function generateBlocks(exercises, duration) {
-    let workout = "<div class='workout-section'><h2>Workout Structure: Blocks</h2>";
-    const blocks = Math.max(1, Math.floor(duration / 10));
-    const exercisesPerBlock = 3;
-    const rounds = 2;
-
-    for (let i = 0; i < blocks; i++) {
-        workout += `<h3>Block ${i + 1} (${rounds} rounds)</h3>`;
-        for (let j = 0; j < exercisesPerBlock; j++) {
-            const index = (i * exercisesPerBlock + j) % exercises.length;
-            const [exercise, reps] = exercises[index];
-            workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+        function generateMainWorkout(exercises, duration) {
+            let workout = '<h3>Main Workout</h3>';
+            const numExercises = Math.min(Math.floor(duration / 5), exercises.length);
+            
+            for (let i = 0; i < numExercises; i++) {
+                workout += `<p>${exercises[i][0]}: ${exercises[i][1]}</p>`;
+            }
+            
+            return workout;
         }
-        workout += "<p>Rest 60 seconds between rounds and blocks.</p>";
-    }
-    workout += "</div>";
-    return workout;
-}
 
-function generateCircuits(exercises, duration) {
-    let workout = "<div class='workout-section'><h2>Workout Structure: Circuits</h2>";
-    const circuits = Math.max(1, Math.floor(duration / 15));
-    const exercisesPerCircuit = 4;
-    const rounds = 2;
-
-    for (let i = 0; i < circuits; i++) {
-        workout += `<h3>Circuit ${i + 1} (${rounds} rounds)</h3>`;
-        for (let j = 0; j < exercisesPerCircuit; j++) {
-            const index = (i * exercisesPerCircuit + j) % exercises.length;
-            const [exercise, reps] = exercises[index];
-            workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
+        function generateWarmup() {
+            let warmup = '<h3>Warm-up (5-10 minutes)</h3>';
+            const shuffledWarmups = [...warmups];
+            shuffleArray(shuffledWarmups);
+            
+            for (let i = 0; i < 5; i++) {
+                warmup += `<p>${shuffledWarmups[i][0]}: ${shuffledWarmups[i][1]}</p>`;
+            }
+            
+            return warmup;
         }
-        workout += "<p>Rest 90 seconds between rounds and circuits.</p>";
-    }
-    workout += "</div>";
-    return workout;
-}
 
-function generateEMOM(exercises, duration) {
-    let workout = "<div class='workout-section'><h2>Workout Structure: EMOM (Every Minute On the Minute)</h2>";
-    workout += "<p>Perform each exercise for 45 seconds, rest for 15 seconds, then move to the next exercise.</p>";
-    const rounds = Math.max(1, Math.floor(duration / 5));
-    workout += `<p>Complete ${rounds} rounds (${duration} minutes total):</p>`;
+        function generateCoolDown() {
+            return `
+                <h3>Cool Down (5-10 minutes)</h3>
+                <p>Light jogging or walking: 2-3 minutes</p>
+                <p>Static stretching: 3-5 minutes</p>
+                <p>Deep breathing exercises: 1-2 minutes</p>
+            `;
+        }
 
-    for (let i = 0; i < Math.min(5, exercises.length); i++) {
-        const [exercise] = exercises[i];
-        workout += `<div class='exercise'><span class='exercise-name'>Minute ${i + 1}: ${exercise}</span></div>`;
-    }
-    workout += "</div>";
-    return workout;
-}
+        // Make generateWorkout function global
+        window.generateWorkout = function() {
+            const type = document.getElementById('workoutType').value;
+            const duration = parseInt(document.getElementById('workoutDuration').value);
+            const exercises = [...workouts[type]];
+            shuffleArray(exercises);
 
-function generateAMRAP(exercises, duration) {
-    let workout = "<div class='workout-section'><h2>Workout Structure: AMRAP (As Many Rounds As Possible)</h2>";
-    workout += `<p>Complete as many rounds as possible in ${duration} minutes:</p>`;
+            let workout = `<h2>${type.replace(/([A-Z])/g, ' $1').trim().toUpperCase()} WORKOUT (${duration} minutes)</h2>`;
 
-    const exercisesCount = Math.min(5, exercises.length);
-    for (let i = 0; i < exercisesCount; i++) {
-        const [exercise, reps] = exercises[i];
-        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
-    }
-    workout += "</div>";
-    return workout;
-}
+            // Warmup
+            workout += generateWarmup();
 
-function generateTabata(exercises, duration) {
-    let workout = "<div class='workout-section'><h2>Workout Structure: Tabata</h2>";
-    workout += "<p>Perform each exercise for 20 seconds, rest for 10 seconds.</p>";
-    const rounds = Math.max(1, Math.floor(duration / 4));
-    workout += `<p>Complete ${rounds} rounds of each exercise before moving to the next.</p>`;
+            // Main workout
+            workout += generateMainWorkout(exercises, duration);
 
-    const exercisesCount = Math.min(4, exercises.length);
-    for (let i = 0; i < exercisesCount; i++) {
-        const [exercise] = exercises[i];
-        workout += `<div class='exercise'><span class='exercise-name'>Exercise ${i + 1}: ${exercise}</span></div>`;
-    }
-    workout += "</div>";
-    return workout;
-}
+            // Cool Down
+            workout += generateCoolDown();
 
-function generateWarmup() {
-    let workout = "<div class='workout-section'><h2>Warmup</h2>";
-    const warmupExercises = [...warmups];
-    shuffleArray(warmupExercises);
-    for (let i = 0; i < 5; i++) {
-        const [exercise, reps] = warmupExercises[i];
-        workout += `<div class='exercise'><span class='exercise-name'>${exercise}</span><span>${reps}</span></div>`;
-    }
-    workout += "</div>";
-    return workout;
-}
+            document.getElementById('workout').innerHTML = workout;
+        };
 
-function generateCoolDown() {
-    let workout = "<div class='workout-section'><h2>Cool Down</h2>";
-    workout += "<p>Light stretching for 5-10 minutes.</p>";
-    workout += "<p>Remember to adjust intensity and rest periods based on your fitness level.</p></div>";
-    return workout;
-}
+        // Add event listener to the button
+        document.getElementById('generateWorkoutBtn').addEventListener('click', generateWorkout);
     </script>
+</body>
 </html>
