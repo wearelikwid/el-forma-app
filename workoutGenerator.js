@@ -1,5 +1,3 @@
-// workoutGenerator.js
-
 import { workouts } from './exercises.js';
 import { shuffleArray } from './utils.js';
 import { generateWarmup } from './warmup.js';
@@ -10,11 +8,20 @@ export async function generateWorkout(type, duration) {
     const exercises = [...workouts[type]];
     shuffleArray(exercises);
 
-    let workout = `<h2>${formatWorkoutType(type)} WORKOUT (${duration} minutes)</h2>`;
-
-    workout += generateWarmup();
-    workout += await generateMainWorkout(exercises, duration);
-    workout += generateCoolDown();
+    let workout = `
+        <div class="workout-result">
+            <h2 class="workout-title">${formatWorkoutType(type)} WORKOUT (${duration} minutes)</h2>
+            <div class="workout-section">
+                ${generateWarmup()}
+            </div>
+            <div class="workout-section">
+                ${await generateMainWorkout(exercises, duration)}
+            </div>
+            <div class="workout-section">
+                ${generateCoolDown()}
+            </div>
+        </div>
+    `;
 
     return workout;
 }
