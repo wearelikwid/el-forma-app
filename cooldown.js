@@ -1,10 +1,10 @@
-// cooldown.js
-
 export function generateCoolDown() {
     return `
-        <h3>Cool Down (5-10 minutes)</h3>
-        <p>Light jogging or walking: 2-3 minutes</p>
-        <p>Static stretching: 3-5 minutes</p>
-        <p>Deep breathing exercises: 1-2 minutes</p>
+        <h3 class="section-title">Cool Down (5-10 minutes)</h3>
+        <ul class="exercise-list">
+            <li><span class="exercise-name">Light jogging or walking:</span> 2-3 minutes</li>
+            <li><span class="exercise-name">Static stretching:</span> 3-5 minutes</li>
+            <li><span class="exercise-name">Deep breathing exercises:</span> 1-2 minutes</li>
+        </ul>
     `;
 }
